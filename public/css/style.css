@@ -1,0 +1,150 @@
+body {
+	/*padding-top: 60px;*/
+	padding-bottom: 40px;
+}
+.content {
+	min-height: 800px;
+}
+.change-photo {
+	background-color: #008AB8;
+	width: 97%;
+	top: -17px;
+	position: relative;
+}
+
+.change-photo a{
+	color: white;
+	text-decoration: none;
+	font-size: 10px;
+}
+
+.login-options {
+	font-size: 12px;
+	padding-top: 6px;
+}
+
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+.navbar-wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 20;
+	margin-top: 20px;
+}
+
+.social_login .social_authTitle {
+	text-align: center;
+	line-height: 300%;
+}
+
+.social_login .social_socialButtons a {
+	color: white;
+	//
+	In
+	yourUse
+	@body-bg
+	opacity
+	:
+	0.9;
+}
+
+.social_login .social_socialButtons a:hover {
+	color: white;
+	opacity: 1;
+}
+
+.social_login .social_buttons .social_btn-facebook {
+	background: #3b5998;
+}
+
+.social_login .social_buttons .social_btn-twitter {
+	background: #00aced;
+}
+
+.social_login .social_buttons .social_btn-google {
+	background: #c32f10;
+}
+
+.social_login .social_loginOr {
+	position: relative;
+	font-size: 1.5em;
+	color: #aaa;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+
+.social_login .social_loginOr .social_hrOr {
+	background-color: #cdcdcd;
+	height: 1px;
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+}
+
+.social_login .social_loginOr .social_spanOr {
+	display: block;
+	position: absolute;
+	left: 43%;
+	top: -0.6em;
+	margin-left: -1.5em;
+	background-color: white;
+	width: 7em;
+	text-align: center;
+}
+
+.social_login .social_loginForm .input-group.i {
+	width: 2em;
+}
+
+.social_login .social_loginForm  .help-block {
+	color: red;
+}
+
+@media ( min-width : 768px) {
+	.social_login .social_forgotPwd {
+		text-align: right;
+		margin-top: 10px;
+	}
+}
+
+/* Flip around the padding for proper display in narrow viewports */
+.navbar-wrapper .container {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.navbar-wrapper .navbar {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.navbar-content {
+	width: 320px;
+	padding: 15px;
+	padding-bottom: 0px;
+}
+
+.navbar-content:before,.navbar-content:after {
+	display: table;
+	content: "";
+	line-height: 0;
+}
+
+.navbar-nav.navbar-right:last-child {
+	margin-right: 15px !important;
+}
+
+.navbar-footer {
+	background-color: #DDD;
+}
+
+.navbar-footer-content {
+	padding: 15px 15px 15px 15px;
+}
+
+.dropdown-menu {
+	padding: 0px;
+	overflow: hidden;
+}
