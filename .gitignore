@@ -1,5 +1,6 @@
 # Composer files
 composer.phar
+composer.json
 #vendor/
 
 # Local configs
@@ -19,14 +20,14 @@ temp/
 demos/
 extras/documentation
 
-nbproject/
 ._*
 .~lock.*
-.buildpath/
+.buildpath
 .DS_Store
-.idea/
-.project/
+.idea
+.project
 .settings/
-composer.lock
+*.lock
 vendor/bin/
 *~
+
