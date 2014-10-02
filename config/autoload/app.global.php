@@ -14,12 +14,12 @@ return array(
         'app' => array ( 
         		'45893' => array (
         				'name' => 'MarkSend',
-        				'url' => 'http://marksend.dev/',
+        				'url' => 'http://marksend.uni.me/',
         				'token' => '4e1650a3a4d9a5e8a879011bcecbc262'
         		),
         		'79216' => array (
         				'name' => 'ClickMark',
-		        		'url' => 'http://clickmark.dev/',
+		        		'url' => 'http://clickmark.uni.me/',
 		        		'token' => 'c6fd603ccc5ff5898097dd4ed0d2a93a'
 		        	),
         )
