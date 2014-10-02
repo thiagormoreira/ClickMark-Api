@@ -1,0 +1,13 @@
+[submodule "vendor/ZF2"]
+	path = vendor/ZF2
+	url = https://github.com/zendframework/zf2.git
+
+[submodule "vendor/aws/aws-sdk-php"]
+	path = vendor/aws/aws-sdk-php
+	url = https://github.com/aws/aws-sdk-php.git
+
+[submodule "vendor/symfony/event-dispatcher/Symfony/Component/EventDispatcher"]
+	path = vendor/symfony/event-dispatcher/Symfony/Component/EventDispatcher
+	url = https://github.com/symfony/EventDispatcher.git
+
+
