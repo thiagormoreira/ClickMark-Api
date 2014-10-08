@@ -12,9 +12,9 @@
  */
 $db = array(
         'database' => 'db_clickmark',
-        'username' => 'root',
-        'password' => 'q1o0w2i9e3u8r4y7t5',
-        'hostname' => 'clickmarkdb.cyzsecjxal8e.sa-east-1.rds.amazonaws.com',
+        'username' => 'dev_user',
+        'password' => '3f8af7c0504a99c0',
+        'hostname' => 'ckickmark-master.cvh6qgvenkpw.us-east-1.rds.amazonaws.com',
         'port' => '3306'
 );
 
