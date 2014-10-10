@@ -1,0 +1,207 @@
+<style>
+.colorgraph {
+	height: 5px;
+	border-top: 0;
+	background: #c4e17f;
+	border-radius: 5px;
+	background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%,
+		#f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%,
+		#db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%,
+		#669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%,
+		#f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%,
+		#db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%,
+		#669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca
+		25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe
+		50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1
+		87.5%, #62c2e4 87.5%, #62c2e4);
+	background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca
+		25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe
+		50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1
+		87.5%, #62c2e4 87.5%, #62c2e4);
+}
+
+li {
+	list-style-type: none;
+}
+</style>
+
+<script>
+    window.open    = function(){};
+    window.print   = function(){};
+    // Support hover state for mobile.
+    if (false) {
+      window.ontouchstart = function(){};
+    }
+
+    function __linkClick(e) {
+      parent.window.postMessage(this.href, '*');
+    };
+
+    function __bindToLinks() {
+      var __links = document.querySelectorAll('a');
+      for (var i = 0, l = __links.length; i < l; i++) {
+        if ( __links[i].getAttribute('data-t') == '_blank' ) {
+          __links[i].addEventListener('click', __linkClick, false);
+        }
+      }
+    }
+  </script>
+
+<div class="row">
+	<div
+		class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+		<?php
+// within a view script
+$form = $this->form;
+
+// $form->setAttribute('action', $this->url('cadastro', array('action' =>
+// 'index')));
+$form->setAttribute('method', 'POST');
+$form->setAttribute('role', 'form');
+
+$form->prepare();
+?>
+	  	<?php echo $this->form()->openTag($form)?>
+			<h2>
+			Crie sua conta <small>ClickMark</small>
+		</h2>
+		<hr class="colorgraph">
+		<div class="row">
+			<div class="col-xs-6 col-sm-6 col-md-6">
+				<div class="form-group">
+						<?php echo $this->formElement($form->get('first_name'))?>
+						<small><span class="text-danger"><?php echo $this->formElementErrors($form->get('first_name')) ?></span></small>
+				</div>
+			</div>
+			<div class="col-xs-6 col-sm-6 col-md-6">
+				<div class="form-group">
+						<?php echo $this->formElement($form->get('last_name'))?>
+						<small><span class="text-danger"><?php echo $this->formElementErrors($form->get('last_name')) ?></span></small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+				<?php echo $this->formElement($form->get('email'))?>
+				<small><span class="text-danger"><?php echo $this->formElementErrors($form->get('email')) ?></span></small>
+				<?php echo $this->flashMessenger()->render('error', array('alert', 'alert-danger')); ?>
+		</div>
+		<div class="row">
+			<div class="col-xs-6 col-sm-6 col-md-6">
+				<div class="form-group">
+						<?php echo $this->formElement($form->get('password'))?>
+						<small><span class="text-danger"><?php echo $this->formElementErrors($form->get('password')) ?></span></small>
+				</div>
+			</div>
+			<div class="col-xs-6 col-sm-6 col-md-6">
+				<div class="form-group">
+						<?php echo $this->formElement($form->get('password_confirmation'))?>
+						<small><span class="text-danger"><?php echo $this->formElementErrors($form->get('password_confirmation')) ?></span></small>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-3 col-sm-3 col-md-3">
+				<span class="button-checkbox">
+						<?php echo $this->formElement($form->get('agree'))?>
+                        <small><span class="text-danger"><?php echo $this->formElement($form->get('t_and_c')) ?></span></small>
+				</span>
+			</div>
+			<div class="col-xs-9 col-sm-9 col-md-9">
+				Clicando em <strong class="label label-success">Cadastrar</strong>,
+				você aceita os <a href="#" data-toggle="modal"
+					data-target="#t_and_c_m">Termos e Condições</a> do serviço,
+				incluindo o uso de <i>Cookies</i>.
+			</div>
+		</div>
+
+		<hr class="colorgraph">
+		<div class="row">
+			<div class="col-xs-12 col-md-12">
+					<?php echo $this->formElement($form->get('submit'))?>
+				</div>
+			<!-- div class="col-xs-6 col-md-6"><a href="#" class="btn btn-success btn-block btn-lg">Entrar</a></div -->
+		</div>
+	  	<?php echo $this->form()->closeTag($form)?>
+	  	
+	  	<div class="social_login">
+			<div class="row social_row-sm-offset-3 social_loginOr">
+				<div class="col-xs-12 col-sm-12">
+					<hr class="social_hrOr">
+					<span class="social_spanOr">or sign in with</span>
+				</div>
+			</div>
+			<div class="row social_row-sm-offset-3 social_buttons">
+				<div class="col-xs-4 col-sm-4">
+					<a href="/register/provider/facebook"
+						class="btn btn-block btn-social btn-facebook"> <i
+						class="fa fa-facebook"></i> Facebook
+					</a>
+				</div>
+				<div class="col-xs-4 col-sm-4">
+					<a href="/register/provider/twitter"
+						class="btn btn-block btn-social btn-twitter"> <i
+						class="fa fa-twitter"></i> Twitter
+					</a>
+				</div>
+				<div class="col-xs-4 col-sm-4">
+					<a href="/register/provider/google"
+						class="btn btn-block btn-social btn-google-plus"> <i
+						class="fa fa-google-plus"></i> Google
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="t_and_c_m" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">Termos & Condições</h4>
+			</div>
+			<div class="modal-body">
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+					Similique, itaque, modi, aliquam nostrum at sapiente consequuntur
+					natus odio reiciendis perferendis rem nisi tempore possimus ipsa
+					porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+					Similique, itaque, modi, aliquam nostrum at sapiente consequuntur
+					natus odio reiciendis perferendis rem nisi tempore possimus ipsa
+					porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+					Similique, itaque, modi, aliquam nostrum at sapiente consequuntur
+					natus odio reiciendis perferendis rem nisi tempore possimus ipsa
+					porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+					Similique, itaque, modi, aliquam nostrum at sapiente consequuntur
+					natus odio reiciendis perferendis rem nisi tempore possimus ipsa
+					porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+					Similique, itaque, modi, aliquam nostrum at sapiente consequuntur
+					natus odio reiciendis perferendis rem nisi tempore possimus ipsa
+					porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+					Similique, itaque, modi, aliquam nostrum at sapiente consequuntur
+					natus odio reiciendis perferendis rem nisi tempore possimus ipsa
+					porro delectus quidem dolorem ad.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+					Similique, itaque, modi, aliquam nostrum at sapiente consequuntur
+					natus odio reiciendis perferendis rem nisi tempore possimus ipsa
+					porro delectus quidem dolorem ad.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Eu
+					concordo</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
