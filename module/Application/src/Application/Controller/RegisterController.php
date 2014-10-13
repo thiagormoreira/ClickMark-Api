@@ -17,6 +17,7 @@ use Facebook\FacebookRequest;
 use Facebook\GraphUser;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
+use Application\Model\Crypt;
 
 class RegisterController extends AbstractActionController
 {
@@ -49,35 +50,54 @@ class RegisterController extends AbstractActionController
             $form->setInputFilter($user->getInputFilter());
             $form->setData($data);
             
-            if ($form->isValid()) {
-                if ($this->getUserTable()->isUniqueEmail($data->email)) {
-                    $transport = $this->getServiceLocator()->get(
-                            'mail.transport');
-                    $message = new Message();
-                    $message->addTo($data->email, 
-                            $data->first_name . $data->last_name)
-                        ->addFrom('loganguns@gmail.com', 'ClickMark Digital')
-                        ->setSubject('Ativação Registro ClickMark Digital')
-                        ->setBody( 'http://' . $_SERVER['HTTP_HOST'] . '/user/activate/' . urlencode(base64_encode($data->email)));
-                    $transport->send($message);
-                    
-                    $user->exchangeArray($data);
-                    $this->getUserTable()->saveUser($user);
-                    
-                    $this->flashMessenger()->addSuccessMessage(
-                            'Conta criada com sucesso!');
-                    return $this->redirect()->toRoute('home');
-                } else {
-                    $this->flashMessenger()->addErrorMessage(
-                            'Email já cadastrado!');
-                }
-            }
+            $sm = $this->getServiceLocator();
+                
+            $appArray = $sm->get('Config')['app'];
+            $appId = base64_decode($data->appId);
+            var_dump($form->isValid());
+            if ( array_key_exists($appId, $appArray )){
+                if ($form->isValid()) {
+	                if ($this->getUserTable()->isUniqueEmail($data->email)) {
+	                    
+	                    $transport = $this->getServiceLocator()->get('mail.transport');
+	                    $message = new Message();
+	                    $message->addTo($data->email, 
+	                            $data->first_name . $data->last_name)
+	                        ->addFrom('loganguns@gmail.com', 'ClickMark Digital')
+	                        ->setSubject('Ativação Registro ClickMark Digital')
+	                        ->setBody( 'http://' . $_SERVER['HTTP_HOST'] . '/user/activate/' . urlencode(base64_encode($data->email)));
+	                    $transport->send($message);
+	                    
+	                    $user->exchangeArray($data);
+	                    $saveUser = $this->getUserTable()->saveUser($user);
+	                    
+	                    if ( $saveUser > 0){
+	                    	//Salvou
+	                    	$response = array( 'success' => true);
+	                    } else {
+	                        //Deu algo errado e nao salvou =/
+	                        $response = array( 'success' => false, 'errorCode' => '1', 'message' => 'Not saved');
+	                    }
+	                } else {
+	                    	//Email ja Cadastrado
+	                        $response = array( 'success' => false, 'errorCode' => '2', 'message' => 'Email already register');
+	                }
+	            } else {
+	                // Form Invalido
+	                $response = array( 'success' => false, 'errorCode' => '3', 'message' => 'Invalid Form');
+	            }
+                
+	            $crypt = new Crypt();
+	             
+	            $output = $crypt->encryptArrayResponse($response);
+	            
+	            $url = $appArray[$appId]['url']. 'register/?q=' . $output;
+	            $this->redirect()->toUrl($url);
+	            
+            } else {
+                throw new \Exception('Invalid AppId');
+            }   
         }
-        
-        $this->layout('layout/layout2.phtml');
-        return new ViewModel(array(
-                'form' => $form
-        ));
     }
 
     public function providerAction ()

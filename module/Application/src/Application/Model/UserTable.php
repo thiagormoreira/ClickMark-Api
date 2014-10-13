@@ -87,7 +87,7 @@ class UserTable extends AbstractTableGateway
         $idUser = (int) $user->getIdUser();
         
         if (empty($idUser)) {
-            $this->insert($data);
+            return $this->insert($data);
         } else {
             if ($this->getUser($idUser)) {
                 $this->update($data, 

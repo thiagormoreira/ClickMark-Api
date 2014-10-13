@@ -57,20 +57,6 @@ class RegisterForm extends Form
                         'tabindex' => '5'
                 ));
         
-        $t_and_c = new Checkbox('t_and_c');
-        $t_and_c->setAttributes(array(
-                'class' => 'hidden'
-        ))->setValue('1');
-        
-        $agree = new Element('agree');
-        $agree->setAttributes(
-                array(
-                        'class' => 'btn',
-                        'data-color' => 'info',
-                        'type' => 'button',
-                        'tabindex' => '6'
-                ))->setValue('Eu concordo');
-        
         $submit = new Element('submit');
         $submit->setAttributes(
                 array(
@@ -88,10 +74,6 @@ class RegisterForm extends Form
         $this->add($email);
         $this->add($password);
         $this->add($password_confirmation);
-        $this->add($t_and_c);
-        $this->add($agree, array(
-                'priority' => - 100
-        ));
         $this->add($submit, array(
                 'priority' => - 100
         ));
