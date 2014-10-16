@@ -59,14 +59,32 @@ class RegisterController extends AbstractActionController
                 if ($form->isValid()) {
 	                if ($this->getUserTable()->isUniqueEmail($data->email)) {
 	                    
-	                    $transport = $this->getServiceLocator()->get('mail.transport');
-	                    $message = new Message();
-	                    $message->addTo($data->email, 
-	                            $data->first_name . $data->last_name)
-	                        ->addFrom('loganguns@gmail.com', 'ClickMark Digital')
-	                        ->setSubject('Ativação Registro ClickMark Digital')
-	                        ->setBody( 'http://' . $_SERVER['HTTP_HOST'] . '/user/activate/' . urlencode(base64_encode($data->email)));
-	                    $transport->send($message);
+	                    $crypt = new Crypt();
+	                    
+	                    $output = $crypt->encryptArrayResponse($data->email);
+	                    
+	                    $from = 'philipebarros@hotmail.com';
+		                $email = $data->email;
+		                $assunto = 'Ativação Conta MarkSend';
+		                $activationLink = 'http://'.$_SERVER['HTTP_HOST'].'/register/activate/'.urlencode(base64_encode($output));
+		                $mensagem = <<<EOD
+                            <a href='{$activationLink}'>{$activationLink}</a>
+EOD;
+                
+		                $ses = new SimpleEmailService('AKIAIX32JUETXGGVTYGA', '1/D6IFvP6VAs3yKsqTsh7l179nj7m5PBogwAYc23');
+		                //cria uma nova instancia
+		                
+		                $m = new SimpleEmailServiceMessage();
+		                //seta valores definidos nas variaveis acima
+		                $m->addTo($email);
+		                $m->setFrom($from);
+		                $m->setSubjectCharset('ISO-8859-1');
+		                $m->setMessageCharset('ISO-8859-1');
+		                $m->setSubject('=?UTF-8?B?'.base64_encode($assunto).'?= ');
+		                $m->setMessageFromString(NULL,$mensagem);
+		                
+		                //envia email
+		                $ses->sendEmail($m);
 	                    
 	                    $user->exchangeArray($data);
 	                    $saveUser = $this->getUserTable()->saveUser($user);
@@ -145,6 +163,26 @@ class RegisterController extends AbstractActionController
         }
         
         return false;
+    }
+    
+    public function activateAction ()
+    {
+    	if($this->params('code') != null){
+    		$crypt = new Crypt();
+    		$email = $crypt->decryptArrayResponse($this->params('code'));
+    
+    		if ($this->getUserTable()->activateUserByEmail($email)) {
+    
+    			$this->flashMessenger()->addSuccessMessage(
+    					'Conta ativada com sucesso!');
+    		} else {
+    
+    			$this->flashMessenger()->addErrorMessage(
+    					'Código não encontrado ou inválido! ');
+    		}
+    	}
+    
+    	//return $this->redirect ()->toRoute ( 'home' );
     }
 }
 

@@ -73,7 +73,7 @@ class Crypt{
 	    $key = hex2bin($key);
 
 	    $responseDecrypt = $this->decrypt(base64_decode($responseEncrypt), $key, array ( 'algo' => 'aes'));
-	    var_dump($responseDecrypt);
+	    
 	    $responseArray = json_decode($responseDecrypt);
 	    
 	    return $responseArray;

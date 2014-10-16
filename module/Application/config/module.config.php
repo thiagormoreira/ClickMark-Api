@@ -34,6 +34,17 @@ return array(
                                         )
                                 )
                         ),
+                        'activate-user' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                        'route' => '/register/activate[/:code]',
+                                        'defaults' => array(
+                                                'controller' => 'Application\Controller\Register',
+                                                'action' => 'activate',
+                                        		'code' => 'none'
+                                        )
+                                )
+                        ),
                         // The following is a route to simplify getting started
                         // creating
                         // new controllers and actions without needing to create
