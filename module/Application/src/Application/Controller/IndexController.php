@@ -89,7 +89,7 @@ class IndexController extends AbstractActionController
                 
                 if(array_key_exists($appId, $appArray )){
                 		
-                		if ($auth->Authenticate($this->_adapter)) {
+                	if ($auth->Authenticate($this->_adapter)) {
                 			
                 			$getUser = $this->getUserTable()->getUserByEmail(
                 					$auth->getAuthEmail()
@@ -108,7 +108,8 @@ class IndexController extends AbstractActionController
 					        $crypt = new Crypt();
 					        $output = $crypt->encryptArrayResponse($response);
 					        $url = $appArray[$appId]['url']. 'auth/login/' . $output;
-					        return $this->redirect()->toUrl($url);
+					        var_dump($url);
+							return $this->redirect()->toUrl($url);
 
                 	} else {
                 		
