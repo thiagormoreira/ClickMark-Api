@@ -76,7 +76,7 @@ class IndexController extends AbstractActionController
             $form->setInputFilter($auth->getInputFilter());
             $form->setData($request->getPost());
             
-            if ($form->isValid()) {
+            //if ($form->isValid()) {
                 
                 $auth->exchangeArray($form->getData());
                 // var_dump ( $form->getData () );
@@ -123,10 +123,10 @@ class IndexController extends AbstractActionController
             } else {
                 throw new \Exception('Invalid AppId');
             }  
-        } else {
-            $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
-            return $this->redirect()->toUrl($url);
-        }
+        //} else {
+        //    $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
+        //    return $this->redirect()->toUrl($url);
+        //}
     }
 
     public function providerAction ()
