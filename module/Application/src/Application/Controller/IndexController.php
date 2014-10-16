@@ -125,7 +125,7 @@ class IndexController extends AbstractActionController
             }  
         } else {
             $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
-            //return $this->redirect()->toUrl($url);
+            return $this->redirect()->toUrl($url);
         }
     }
 
