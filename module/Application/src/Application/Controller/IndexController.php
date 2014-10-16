@@ -156,19 +156,4 @@ class IndexController extends AbstractActionController
         
         return false;
     }
-
-    public function logoutAction ()
-    {
-        $auth = $this->getServiceLocator()->get('auth_service');
-        $auth->clearIdentity();
-        
-        $sessionUser = new Container('user');
-        $sessionUser->getManager()
-            ->getStorage()
-            ->clear();
-        
-        $this->flashMessenger()->addSuccessMessage('Deslogado');
-        
-        return $this->redirect()->toRoute('home');
-    }
 }

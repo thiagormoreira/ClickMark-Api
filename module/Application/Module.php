@@ -45,10 +45,10 @@ class Module
         $allowedAction = $this->whitelistAction;
         
         $sm = $e->getApplication()->getServiceManager();
-        $sm->get('translator')
+        /*$sm->get('translator')
             ->setLocale(
                 \Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']))
-            ->setFallbackLocale('en_US');
+            ->setFallbackLocale('en_US');*/
         
         $auth = $sm->get('auth_service');
         

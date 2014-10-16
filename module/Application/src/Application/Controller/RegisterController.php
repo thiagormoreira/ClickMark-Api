@@ -18,6 +18,8 @@ use Facebook\GraphUser;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
 use Application\Model\Crypt;
+use Application\Model\SimpleEmailService;
+use Application\Model\SimpleEmailServiceMessage;
 
 class RegisterController extends AbstractActionController
 {
@@ -66,7 +68,7 @@ class RegisterController extends AbstractActionController
 	                    $from = 'philipebarros@hotmail.com';
 		                $email = $data->email;
 		                $assunto = 'Ativação Conta MarkSend';
-		                $activationLink = 'http://'.$_SERVER['HTTP_HOST'].'/register/activate/'.urlencode(base64_encode($output));
+		                $activationLink = $appArray[$appId]['url'].'user/activate/'.urlencode(base64_encode($output));
 		                $mensagem = <<<EOD
                             <a href='{$activationLink}'>{$activationLink}</a>
 EOD;
@@ -169,19 +171,24 @@ EOD;
     {
     	if($this->params('code') != null){
     		$crypt = new Crypt();
-    		$email = $crypt->decryptArrayResponse($this->params('code'));
-    
-    		if ($this->getUserTable()->activateUserByEmail($email)) {
-    
-    			$this->flashMessenger()->addSuccessMessage(
-    					'Conta ativada com sucesso!');
+    		$code = base64_decode(urldecode($this->params('code')));
+    		$email = $crypt->decryptArrayResponse($code);
+    		
+    		if ($this->getUserTable()->activateUserByEmail($email->response)) {
+    			$status = array (
+    			        'success' => true,
+    			);
+    			//echo 'Conta ativada com sucesso!';
     		} else {
+    			$status = array (
+    			        'success' => false,
+    			);
     
-    			$this->flashMessenger()->addErrorMessage(
-    					'Código não encontrado ou inválido! ');
+    			//echo 'Código não encontrado ou inválido! ';
     		}
     	}
-    
+    	echo json_encode($status);
+    	exit();
     	//return $this->redirect ()->toRoute ( 'home' );
     }
 }
