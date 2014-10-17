@@ -49,7 +49,7 @@ class IndexController extends AbstractActionController
         
         if ($request->isPost()) {
 
-        	$this->loginAction();
+        	//$this->loginAction();
         } else {
             $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
             //return $this->redirect()->toUrl($url);
