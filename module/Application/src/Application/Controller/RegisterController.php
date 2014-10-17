@@ -56,7 +56,7 @@ class RegisterController extends AbstractActionController
                 
             $appArray = $sm->get('Config')['app'];
             $appId = base64_decode($data->appId);
-            var_dump($form->isValid());
+            //var_dump($form->isValid());
             if ( array_key_exists($appId, $appArray )){
                 if ($form->isValid()) {
 	                if ($this->getUserTable()->isUniqueEmail($data->email)) {
