@@ -43,12 +43,68 @@ class IndexController extends AbstractActionController
         
         $request = $this->getRequest();
         
-        $crypt5 = new Crypt();
-        $output5 = $crypt5->encryptArrayResponse('teste');
-        var_dump($output5);
+        $sm = $this->getServiceLocator();
+        $appArray = $sm->get('Config')['app'];
+        $appId = base64_decode($this->params()->fromPost('appId'));
         
         if ($request->isPost()) {
-
+        	// Form Request Access
+        	if (! $this->_adapter) {
+        		$sm = $this->getServiceLocator();
+        		$this->_adapter = $sm->get('zend_db_adapter');
+        	}
+        	
+        	$auth = new Auth();
+        	
+        	$form->setInputFilter($auth->getInputFilter());
+        	$form->setData($request->getPost());
+        	
+        	if ($form->isValid()) {
+        	
+        		$auth->exchangeArray($form->getData());
+        		$auth->setStoredHash(
+        				$this->getUserTable()
+        				->getPasswordByEmail(
+        						$form->getData()
+        				)
+        		);
+        	
+        		if(array_key_exists($appId, $appArray )){
+        			 
+        			if ($auth->Authenticate($this->_adapter)) {
+        	
+        				$getUser = $this->getUserTable()->getUserByEmail(
+        						$auth->getAuthEmail()
+        				);
+        	
+        				$user = array (
+        						'login' => true,
+        						'firstName' => $getUser->getFirstName(),
+        						'lastName' => $getUser->getLastName(),
+        						'email' => $getUser->getEmail(),
+        						'id' => $getUser->getIdUser()
+        				);
+        				 
+        				$response = array( 'success' => true, 'user' => $user);
+        	
+        				$crypt = new Crypt();
+        				$output = $crypt->encryptArrayResponse($response);
+        				$url = $appArray[$appId]['url']. 'auth/login/' . $output;
+        				 
+        				return $this->redirect()->toUrl($url);
+        	
+        			} else {
+        	
+        				$response = array( 'success' => false, 'errorCode' => '1', 'message' => 'Credentials not found');
+        				$crypt = new Crypt();
+        				$output = $crypt->encryptArrayResponse($response);
+        				$url = $appArray[$appId]['url']. 'user/login/' . $output;
+        				return $this->redirect()->toUrl($url);
+        			}
+        		}
+        	} else {
+        		throw new \Exception('Invalid AppId');
+        	}
         	//$this->loginAction();
         } else {
             $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
