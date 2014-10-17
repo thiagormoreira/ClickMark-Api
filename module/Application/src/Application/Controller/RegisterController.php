@@ -115,7 +115,7 @@ EOD;
                 //throw new \Exception('Invalid AppId');
 		$crypt = new Crypt();
 	             
-            	$output = $crypt->encryptArrayResponse('deu ruim');
+            	$output = $crypt->encryptArrayResponse('deu ruim hein');
             }   
         }
 	            
