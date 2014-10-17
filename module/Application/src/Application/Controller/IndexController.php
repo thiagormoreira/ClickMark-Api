@@ -58,14 +58,12 @@ class IndexController extends AbstractActionController
         
         $request = $this->getRequest();
         
-        //var_dump($this->params()->fromPost());
         $sm = $this->getServiceLocator();
         $appArray = $sm->get('Config')['app'];
         $appId = base64_decode($this->params()->fromPost('appId'));
         
         if ($request->isPost()) {
             // Form Request Access
-            
             if (! $this->_adapter) {
                 $sm = $this->getServiceLocator();
                 $this->_adapter = $sm->get('zend_db_adapter');
@@ -76,10 +74,9 @@ class IndexController extends AbstractActionController
             $form->setInputFilter($auth->getInputFilter());
             $form->setData($request->getPost());
             
-            //if ($form->isValid()) {
+            if ($form->isValid()) {
                 
                 $auth->exchangeArray($form->getData());
-                // var_dump ( $form->getData () );
                 $auth->setStoredHash(
                 	$this->getUserTable()
                     ->getPasswordByEmail(
@@ -88,9 +85,9 @@ class IndexController extends AbstractActionController
                 );
                 
                 if(array_key_exists($appId, $appArray )){
-                		
+                	
                 	if ($auth->Authenticate($this->_adapter)) {
-                			
+                		
                 			$getUser = $this->getUserTable()->getUserByEmail(
                 					$auth->getAuthEmail()
                 			);
@@ -108,7 +105,7 @@ class IndexController extends AbstractActionController
 					        $crypt = new Crypt();
 					        $output = $crypt->encryptArrayResponse($response);
 					        $url = $appArray[$appId]['url']. 'auth/login/' . $output;
-					        var_dump($url);
+					        
 							return $this->redirect()->toUrl($url);
 
                 	} else {
@@ -123,10 +120,10 @@ class IndexController extends AbstractActionController
             } else {
                 throw new \Exception('Invalid AppId');
             }  
-        //} else {
-        //    $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
-        //    return $this->redirect()->toUrl($url);
-        //}
+        } else {
+            $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
+            return $this->redirect()->toUrl($url);
+        }
     }
 
     public function providerAction ()
