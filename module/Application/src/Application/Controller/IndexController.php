@@ -43,12 +43,16 @@ class IndexController extends AbstractActionController
         
         $request = $this->getRequest();
         
+        $crypt5 = new Crypt();
+        $output5 = $crypt5->encryptArrayResponse('teste');
+        var_dump($output5);
+        
         if ($request->isPost()) {
 
         	$this->loginAction();
         } else {
             $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
-            return $this->redirect()->toUrl($url);
+            //return $this->redirect()->toUrl($url);
         }
     }
 
