@@ -111,60 +111,16 @@ EOD;
 	             
 	            $output = $crypt->encryptArrayResponse($response);
 	            
-	            $url = $appArray[$appId]['url']. 'register/?q=' . $output;
-	            $this->redirect()->toUrl($url);
-	            
             } else {
-                throw new \Exception('Invalid AppId');
+                //throw new \Exception('Invalid AppId');
+		$crypt = new Crypt();
+	             
+            	$output = $crypt->encryptArrayResponse('deu ruim');
             }   
         }
-    }
-
-    public function providerAction ()
-    {
-        $provider = $this->params('provider');
-        
-        switch ($provider) {
-            
-            case "facebook":
-                // echo "facebook";
-                $accessToken = 'CAAUszHZB3ukgBADgxONWMzZAZA63T8qk3bCVlZARcT4s9XJZCGsNsiLBaQ27fok9w5hlSfrdXdyVkDIp4UalxTWNscYjZAoevZAVHBJQjmdLHgZAbakngBCzjlW3hJ8ZBZCDC8ZBzUDMLIg2ebDlNUFbiynwIITpXXxmNliGgEYZA1v4yowLndOgLVqvwVqZAhyAN8KcfhZAYfqb9tb6z1aiFgCNF7xnowcfdAQ5AZD';
-                $appSecret = '23bfe766525796d594d383aba0b4f65d';
-                FacebookSession::setDefaultApplication($accessToken, $appSecret);
-                $session = new FacebookSession($accessToken);
-                if ($session) {
-                    
-                    try {
-                        
-                        $user_profile = (new FacebookRequest($session, 'GET', 
-                                '/me'))->execute()->getGraphObject(
-                                GraphUser::className());
-                        
-                        echo "Name: " . $user_profile->getName();
-                    } catch (FacebookRequestException $e) {
-                        
-                        echo "Exception occured, code: " . $e->getCode();
-                        echo " with message: " . $e->getMessage();
-                    }
-                }
-                
-                break;
-            
-            case "twitter":
-                // echo "twitter";
-                
-                break;
-            
-            case "google":
-                // echo "google";
-                
-                break;
-            
-            default:
-                throw new \Exception('Invalid provider');
-        }
-        
-        return false;
+	            
+	            $url = $appArray[$appId]['url']. 'register/?q=' . $output;
+	            return $this->redirect()->toUrl($url);
     }
     
     public function activateAction ()
