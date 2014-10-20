@@ -17,6 +17,7 @@ use Zend\Session\Container;
 use Zend\Http\Header\SetCookie;
 use Application\Model\Crypt;
 use Zend\Crypt\Password\Bcrypt;
+use Zend\View\Model\JsonModel;
 
 class IndexController extends AbstractActionController
 {
@@ -90,7 +91,13 @@ class IndexController extends AbstractActionController
     		$crypt = new Crypt();
     		$output = $crypt->encryptArrayResponse($response);
     		
-    		echo json_encode($output);
+    		$result = new JsonModel(array(
+    				'return' => $output
+    		));
+    		
+    		return $result;
+    		
+    		//echo json_encode($output);
     	}
     	
     	/*
