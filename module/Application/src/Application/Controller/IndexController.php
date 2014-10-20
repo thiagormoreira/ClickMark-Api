@@ -13,7 +13,6 @@ use Zend\View\Model\ViewModel;
 use Zend\Authentication\AuthenticationService;
 use Application\Model\Auth;
 use Application\Model\User;
-use Application\Form\AuthForm;
 use Zend\Session\Container;
 use Zend\Http\Header\SetCookie;
 use Application\Model\Crypt;
@@ -38,89 +37,70 @@ class IndexController extends AbstractActionController
 
     public function indexAction ()
     {
-        	
-        $form = new AuthForm();
-        
-        $request = $this->getRequest();
-        
-        $sm = $this->getServiceLocator();
-        $appArray = $sm->get('Config')['app'];
-        $appId = base64_decode($this->params()->fromPost('appId'));
-        
-        if ($request->isPost()) {
-        	// Form Request Access
-        	if (! $this->_adapter) {
-        		$sm = $this->getServiceLocator();
-        		$this->_adapter = $sm->get('zend_db_adapter');
-        	}
-        	
-        	$auth = new Auth();
-        	
-        	$form->setInputFilter($auth->getInputFilter());
-        	$form->setData($request->getPost());
-        	
-        	if ($form->isValid()) {
-        	
-        		$auth->exchangeArray($form->getData());
-        		$auth->setStoredHash(
-        				$this->getUserTable()
-        				->getPasswordByEmail(
-        						$form->getData()
-        				)
-        		);
-        	
-        		if(array_key_exists($appId, $appArray )){
-        			 
-        			if ($auth->Authenticate($this->_adapter)) {
-        	
-        				$getUser = $this->getUserTable()->getUserByEmail(
-        						$auth->getAuthEmail()
-        				);
-        	
-        				$user = array (
-        						'login' => true,
-        						'firstName' => $getUser->getFirstName(),
-        						'lastName' => $getUser->getLastName(),
-        						'email' => $getUser->getEmail(),
-        						'id' => $getUser->getIdUser()
-        				);
-        				 
-        				$response = array( 'success' => true, 'user' => $user);
-        	
-        				$crypt = new Crypt();
-        				$output = $crypt->encryptArrayResponse($response);
-        				$url = $appArray[$appId]['url']. 'auth/login/' . $output;
-        				 
-        				return $this->redirect()->toUrl($url);
-        	
-        			} else {
-        	
-        				$response = array( 'success' => false, 'errorCode' => '1', 'message' => 'Credentials not found');
-        				$crypt = new Crypt();
-        				$output = $crypt->encryptArrayResponse($response);
-        				$url = $appArray[$appId]['url']. 'user/login/' . $output;
-        				return $this->redirect()->toUrl($url);
-        			}
-        		}
-        	} else {
-        		throw new \Exception('Invalid AppId');
-        	}
-        	//$this->loginAction();
-        } else {
-            $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
-            //return $this->redirect()->toUrl($url);
-        }
+        $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
+       	//return $this->redirect()->toUrl($url);
     }
 
     public function loginAction ()
     {
-        $form = new AuthForm();
-        
+    	$encrypted = $this->params()->fromQuery('q');
+    	$crypt = new Crypt();
+    	
+    	if($crypt->decryptArrayResponse($encrypted) != false){
+    		$credentials = $crypt->decryptArrayResponse(json_encode($encrypted));
+    		//var_dump($credentials);
+    		
+    		$auth = new Auth();
+    		$auth->setAuthEmail($credentials->response->login);
+    		$auth->setAuthPassword($credentials->response->password);
+    		$auth->setStoredHash(
+    				$this->getUserTable()
+    				->getPasswordByEmail(
+    						$credentials->response->login
+    				)
+    		);
+    		//var_dump($auth);
+    		
+    		$sm = $this->getServiceLocator();
+    		$this->_adapter = $sm->get('zend_db_adapter');
+    		
+    		if ($auth->authenticate($this->_adapter)) {
+    			//// SENHA CORRETA ///////////
+    			$getUser = $this->getUserTable()->getUserByEmail(
+    					$auth->getAuthEmail()
+    			);
+    			 
+    			$user = array (
+    					'login' => true,
+    					'firstName' => $getUser->getFirstName(),
+    					'lastName' => $getUser->getLastName(),
+    					'email' => $getUser->getEmail(),
+    					'id' => $getUser->getIdUser()
+    			);
+    			 
+    			$response = array( 'success' => true, 'user' => $user);
+    			//var_dump($output);
+    			//var_dump($response);
+    			//echo 'certo';
+    		} else {
+    			//// SENHA INCORRETA ///////////
+    			$response = array( 'success' => false, 'errorCode' => '1');
+    		}
+    			 
+    		$crypt = new Crypt();
+    		$output = $crypt->encryptArrayResponse($response);
+    		
+    		echo json_encode($output);
+    	}
+    	
+    	/*
         $request = $this->getRequest();
         
         $sm = $this->getServiceLocator();
         $appArray = $sm->get('Config')['app'];
-        $appId = base64_decode($this->params()->fromPost('appId'));
+        //$appId = base64_decode($this->params()->fromPost('appId'));
+        echo 'g';
+        var_dump($this->params('q'));
         
         if ($request->isPost()) {
             // Form Request Access
@@ -166,7 +146,7 @@ class IndexController extends AbstractActionController
 					        $output = $crypt->encryptArrayResponse($response);
 					        $url = $appArray[$appId]['url']. 'auth/login/' . $output;
 					        
-							return $this->redirect()->toUrl($url);
+							//return $this->redirect()->toUrl($url);
 
                 	} else {
                 		
@@ -174,16 +154,17 @@ class IndexController extends AbstractActionController
                 		$crypt = new Crypt();
                 		$output = $crypt->encryptArrayResponse($response);
                 	    $url = $appArray[$appId]['url']. 'user/login/' . $output;
-                	    return $this->redirect()->toUrl($url);
+                	    //return $this->redirect()->toUrl($url);
                 	}
                	}
             } else {
-                throw new \Exception('Invalid AppId');
+                //throw new \Exception('Invalid AppId');
             }  
         } else {
-            $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
-            return $this->redirect()->toUrl($url);
+            //$url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
+            //return $this->redirect()->toUrl($url);
         }
+        */
     }
 
     public function providerAction ()

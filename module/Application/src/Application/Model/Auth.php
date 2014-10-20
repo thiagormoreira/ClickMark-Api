@@ -16,7 +16,7 @@ use Zend\Db\Adapter\Adapter;
  * @author loganguns
  *        
  */
-class Auth implements InputFilterAwareInterface
+class Auth
 {
 
     private $authEmail;
@@ -28,8 +28,6 @@ class Auth implements InputFilterAwareInterface
     private $authRememberMe;
 
     private $storedHash;
-
-    protected $inputFilter;
 
     public function getAuthEmail ()
     {
@@ -55,7 +53,22 @@ class Auth implements InputFilterAwareInterface
     {
         return $this->hash;
     }
-
+    
+    public function setAuthEmail($authEmail) {
+    	$this->authEmail = $authEmail;
+    	return $this;
+    }
+    
+    public function setAuthPassword($authPassword) {
+    	$this->authPassword = $authPassword;
+    	return $this;
+    }
+    
+    public function setAuthAccessToken($authAccessToken) {
+    	$this->authAccessToken = $authAccessToken;
+    	return $this;
+    }
+    
     public function setStoredHash ($hash)
     {
         $this->storedHash = $hash;
@@ -75,118 +88,7 @@ class Auth implements InputFilterAwareInterface
         return get_object_vars($this);
     }
 
-    public function setInputFilter (InputFilterInterface $inputFilter)
-    {
-        throw new \Exception('Not used');
-    }
-
-    public function getInputFilter ()
-    {
-        if (! $this->inputFilter) {
-            $inputFilter = new InputFilter();
-            
-            $factory = new InputFactory();
-            
-            $inputFilter->add(
-                    $factory->createInput(
-                            array(
-                                    'name' => 'authEmail',
-                                    'required' => true,
-                                    'filters' => array(
-                                            array(
-                                                    'name' => 'StripTags'
-                                            ),
-                                            array(
-                                                    'name' => 'StringTrim'
-                                            )
-                                    ),
-                                    'validators' => array(
-                                            array(
-                                                    'name' => 'NotEmpty',
-                                                    'options' => array(
-                                                            'messages' => array(
-                                                                    'isEmpty' => 'Campo obrigatório'
-                                                            )
-                                                    )
-                                                    ,
-                                                    array(
-                                                            'name' => 'StringLength',
-                                                            true,
-                                                            'options' => array(
-                                                                    'ecoding' => 'UTF-8',
-                                                                    'max' => 60,
-                                                                    'message' => 'No máximo %max% caracteres'
-                                                            )
-                                                    ),
-                                                    array(
-                                                            'name' => 'EmailAddress'
-                                                    )
-                                            )
-                                    )
-                            )));
-            
-            $inputFilter->add(
-                    $factory->createInput(
-                            array(
-                                    'name' => 'authPassword',
-                                    'required' => true,
-                                    'filters' => array(
-                                            array(
-                                                    'name' => 'StripTags'
-                                            ),
-                                            array(
-                                                    'name' => 'StringTrim'
-                                            )
-                                    ),
-                                    'validators' => array(
-                                            array(
-                                                    'name' => 'NotEmpty',
-                                                    'options' => array(
-                                                            'messages' => array(
-                                                                    'isEmpty' => 'Campo obrigatório'
-                                                            )
-                                                    )
-                                                    ,
-                                                    array(
-                                                            'name' => 'StringLength',
-                                                            true,
-                                                            'options' => array(
-                                                                    'ecoding' => 'UTF-8',
-                                                                    'min' => 8,
-                                                                    'message' => 'No mínomo %min% caracteres'
-                                                            )
-                                                    )
-                                            )
-                                    )
-                            )));
-            $inputFilter->add(
-                    $factory->createInput(
-                            array(
-                                    'name' => 'authAccessToken',
-                                    'required' => false,
-                                    'filters' => array(
-                                            array(
-                                                    'name' => 'StripTags'
-                                            ),
-                                            array(
-                                                    'name' => 'StringTrim'
-                                            )
-                                    )
-                            )));
-            $inputFilter->add(
-                    $factory->createInput(
-                            array(
-                                    'name' => 'authRememberMe',
-                                    'required' => false
-                            )));
-            
-            $this->inputFilter = $inputFilter;
-        }
-        
-        return $this->inputFilter;
-    }
-
-    function Authenticate (Adapter $adapter)
+    function authenticate (Adapter $adapter)
     {
         /*
          * Criando o auth adapter:&nbsp; passando o primeiro parâmetro o
@@ -243,22 +145,23 @@ class Auth implements InputFilterAwareInterface
                  */
                 switch ($result->getCode()) {
                     case Result::FAILURE_IDENTITY_NOT_FOUND:
-                        echo "O email não existe";
+                        //echo "O email não existe";
                         break;
                     case Result::FAILURE_CREDENTIAL_INVALID:
-                        // echo "A senha não confere";
+                        //echo "A senha não confere";
                         break;
                     default:
                         foreach ($result->getMessages() as $message) {
-                            echo $message;
+                            //echo $message;
                         }
                 }
                 
                 return false;
             }
         } else {
-            // echo "A senha não confere";
+            //echo "A senha não confere";
             return false;
         }
     }
+	
 }

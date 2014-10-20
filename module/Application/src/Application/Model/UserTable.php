@@ -100,7 +100,7 @@ class UserTable extends AbstractTableGateway
         }
     }
 
-    public function getPasswordByEmail ($data)
+    public function getPasswordByEmail ($email)
     {
         $userTable = new TableGateway($this->table, $this->adapter);
         
@@ -108,7 +108,7 @@ class UserTable extends AbstractTableGateway
         $select->from($this->table);
         $select->where(
                 array(
-                        'email' => $data['authEmail']
+                        'email' => $email
                 ));
         $select->columns(array(
                 'password'

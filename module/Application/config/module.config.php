@@ -25,26 +25,25 @@ return array(
         'router' => array(
                 'routes' => array(
                         'home' => array(
-                                'type' => 'Zend\Mvc\Router\Http\Literal',
-                                'options' => array(
-                                        'route' => '/',
-                                        'defaults' => array(
-                                                'controller' => 'Application\Controller\Index',
-                                                'action' => 'index'
-                                        )
+                        	'type' => 'Zend\Mvc\Router\Http\Literal',
+                            'options' => array(
+                            	'route' => '/',
+                                'defaults' => array(
+                                	'controller' => 'Application\Controller\Index',
+                                   	'action' => 'index'
                                 )
+                            )
                         ),
-                        'activate-user' => array(
-                                'type' => 'Segment',
-                                'options' => array(
-                                        'route' => '/register/activate[/:code]',
-                                        'defaults' => array(
-                                                'controller' => 'Application\Controller\Register',
-                                                'action' => 'activate',
-                                        		'code' => 'none'
-                                        )
-                                )
-                        ),
+                		'login' => array(
+							'type'    => 'Zend\Mvc\Router\Http\Segment',
+						    'options' => array(
+						        'route'    => '/login/',
+						        'defaults' => array(
+					            	'controller' => 'Application\Controller\Index',
+					        		'action' => 'login'
+						        ),
+						    ),
+						),
                         // The following is a route to simplify getting started
                         // creating
                         // new controllers and actions without needing to create
@@ -100,8 +99,7 @@ return array(
         ),
         'controllers' => array(
                 'invokables' => array(
-                        'Application\Controller\Index' => 'Application\Controller\IndexController',
-                        'Application\Controller\Register' => 'Application\Controller\RegisterController'
+                        'Application\Controller\Index' => 'Application\Controller\IndexController'
                 )
         ),
         'view_manager' => array(
