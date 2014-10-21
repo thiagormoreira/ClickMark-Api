@@ -18,6 +18,8 @@ use Zend\Http\Header\SetCookie;
 use Application\Model\Crypt;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\View\Model\JsonModel;
+use Application\Model\SimpleEmailService;
+use Application\Model\SimpleEmailServiceMessage;
 
 class IndexController extends AbstractActionController
 {
@@ -39,7 +41,7 @@ class IndexController extends AbstractActionController
     public function indexAction ()
     {
         $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
-       	//return $this->redirect()->toUrl($url);
+       	return $this->redirect()->toUrl($url);
     }
 
     public function loginAction ()
@@ -96,109 +98,107 @@ class IndexController extends AbstractActionController
     		));
     		
     		return $result;
-    		
-    		//echo json_encode($output);
     	}
-    	
-    	/*
-        $request = $this->getRequest();
-        
-        $sm = $this->getServiceLocator();
-        $appArray = $sm->get('Config')['app'];
-        //$appId = base64_decode($this->params()->fromPost('appId'));
-        echo 'g';
-        var_dump($this->params('q'));
-        
-        if ($request->isPost()) {
-            // Form Request Access
-            if (! $this->_adapter) {
-                $sm = $this->getServiceLocator();
-                $this->_adapter = $sm->get('zend_db_adapter');
-            }
-            
-            $auth = new Auth();
-            
-            $form->setInputFilter($auth->getInputFilter());
-            $form->setData($request->getPost());
-            
-            if ($form->isValid()) {
-                
-                $auth->exchangeArray($form->getData());
-                $auth->setStoredHash(
-                	$this->getUserTable()
-                    ->getPasswordByEmail(
-                    	$form->getData()
-                	)
-                );
-                
-                if(array_key_exists($appId, $appArray )){
-                	
-                	if ($auth->Authenticate($this->_adapter)) {
-                		
-                			$getUser = $this->getUserTable()->getUserByEmail(
-                					$auth->getAuthEmail()
-                			);
-                		
-                			$user = array (
-                					'login' => true,
-                					'firstName' => $getUser->getFirstName(),
-                					'lastName' => $getUser->getLastName(),
-                					'email' => $getUser->getEmail(),
-                					'id' => $getUser->getIdUser()
-                			);
-                			
-                			$response = array( 'success' => true, 'user' => $user);
-
-					        $crypt = new Crypt();
-					        $output = $crypt->encryptArrayResponse($response);
-					        $url = $appArray[$appId]['url']. 'auth/login/' . $output;
-					        
-							//return $this->redirect()->toUrl($url);
-
-                	} else {
-                		
-                		$response = array( 'success' => false, 'errorCode' => '1', 'message' => 'Credentials not found');
-                		$crypt = new Crypt();
-                		$output = $crypt->encryptArrayResponse($response);
-                	    $url = $appArray[$appId]['url']. 'user/login/' . $output;
-                	    //return $this->redirect()->toUrl($url);
-                	}
-               	}
-            } else {
-                //throw new \Exception('Invalid AppId');
-            }  
-        } else {
-            //$url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
-            //return $this->redirect()->toUrl($url);
-        }
-        */
     }
 
-    public function providerAction ()
+    public function registerAction ()
     {
-        $provider = $this->params('provider');
-        
-        switch ($provider) {
-            
-            case "facebook":
-                // echo "facebook";
-                
-                break;
-            
-            case "twitter":
-                // echo "twitter";
-                
-                break;
-            
-            case "google":
-                // echo "google";
-                
-                break;
-            
-            default:
-                throw new \Exception('Invalid provider');
-        }
-        
-        return false;
+    	$encrypted = $this->params()->fromQuery('q');
+    	$crypt = new Crypt();
+    	 
+    	if($crypt->decryptArrayResponse($encrypted) != false){
+    		$decryptedArray = $crypt->decryptArrayResponse(json_encode($encrypted));
+			
+    		if ($this->getUserTable()->isUniqueEmail($decryptedArray->response->email)) {
+    			 
+    			$output = $crypt->encryptArrayResponse($decryptedArray->response->email);
+    			//var_dump($decryptedArray);
+    			$appId = base64_decode($decryptedArray->response->appId);
+    			$from = 'philipebarros@hotmail.com';
+    			$email = $decryptedArray->response->email;
+    			$assunto = 'Ativação Conta MarkSend';
+    			$activationLink = $this->getServiceLocator()->get('Config')['app'][$appId]['url'].'user/activate/'.urlencode(base64_encode($output));
+    			$mensagem = <<<EOD
+                            <a href='{$activationLink}'>{$activationLink}</a>
+EOD;
+    			
+    			$ses = new SimpleEmailService('AKIAIX32JUETXGGVTYGA', '1/D6IFvP6VAs3yKsqTsh7l179nj7m5PBogwAYc23');
+    			//cria uma nova instancia
+    			
+    			$m = new SimpleEmailServiceMessage();
+    			//seta valores definidos nas variaveis acima
+    			$m->addTo($email);
+    			$m->setFrom($from);
+    			$m->setSubjectCharset('ISO-8859-1');
+    			$m->setMessageCharset('ISO-8859-1');
+    			$m->setSubject('=?UTF-8?B?'.base64_encode($assunto).'?= ');
+    			$m->setMessageFromString(NULL,$mensagem);
+    			
+    			//envia email
+    			$ses->sendEmail($m);
+    			
+    			// New User
+	    		//var_dump($decryptedArray);
+	    		$user = new User();
+	    		$user->setEmail($decryptedArray->response->email);
+	    		$user->setFirstName($decryptedArray->response->name);
+	    		$user->setLastName($decryptedArray->response->surname);
+	    		$user->setPassword($decryptedArray->response->pass);
+	    		//var_dump($user);
+	    		$saveUser = $this->getUserTable()->saveUser($user);
+	    		 
+	    		if ( $saveUser > 0){
+	    			//Salvou
+	    			$response = array( 'success' => true);
+	    		} else {
+	    			//Deu algo errado e nao salvou =/
+	    			$response = array( 'success' => false, 'errorCode' => '1', 'message' => 'Not saved');
+	    		}
+    		} else {
+              	//Email ja Cadastrado
+            	$response = array( 'success' => false, 'errorCode' => '2', 'message' => 'Email already registered');
+            }
+    		$sm = $this->getServiceLocator();
+    		$this->_adapter = $sm->get('zend_db_adapter');
+    		
+    	
+    		$crypt = new Crypt();
+    		$output = $crypt->encryptArrayResponse($response);
+    	
+    		$result = new JsonModel(array(
+    				'return' => $output
+    		));
+    	
+    		return $result;
+    	}
+    }
+    
+    public function activateAction ()
+    {
+    	if($this->params('code') != null){
+    		$crypt = new Crypt();
+    		$code = base64_decode(urldecode($this->params('code')));
+    		$email = $crypt->decryptArrayResponse($code);
+    
+    		if ($this->getUserTable()->activateUserByEmail($email->response)) {
+    			$status = array (
+    					'success' => true,
+    			);
+    			//echo 'Conta ativada com sucesso!';
+    		} else {
+    			$status = array (
+    					'success' => false,
+    			);
+    
+    			//echo 'Código não encontrado ou inválido! ';
+    		}
+    	}
+    	//echo json_encode($status);
+    	
+    	$result = new JsonModel(array(
+    				'return' => $status
+    		));
+    	
+    		return $result;
     }
 }

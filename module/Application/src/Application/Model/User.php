@@ -8,13 +8,13 @@ use Zend\InputFilter\Factory as InputFactory;
 class User implements InputFilterAwareInterface
 {
 
-    private $idUser;
+    private $iduser;
 
     private $email;
 
-    private $firstName;
+    private $first_name;
 
-    private $lastName;
+    private $last_name;
 
     private $password;
 
@@ -28,7 +28,7 @@ class User implements InputFilterAwareInterface
      */
     public function getIdUser ()
     {
-        return $this->idUser;
+        return $this->iduser;
     }
 
     /**
@@ -38,15 +38,6 @@ class User implements InputFilterAwareInterface
     public function getEmail ()
     {
         return $this->email;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getFirstName ()
-    {
-        return $this->first_name;
     }
 
     /**
@@ -75,6 +66,68 @@ class User implements InputFilterAwareInterface
     {
         return $this->status;
     }
+	
+	/**
+	 *
+	 * @param unknown_type $iduser        	
+	 */
+	public function setIduser($iduser) {
+		$this->iduser = $iduser;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $email        	
+	 */
+	public function setEmail($email) {
+		$this->email = $email;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getFirstName() {
+		return $this->first_name;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $first_name        	
+	 */
+	public function setFirstName($first_name) {
+		$this->first_name = $first_name;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $last_name        	
+	 */
+	public function setLastName($last_name) {
+		$this->last_name = $last_name;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $password        	
+	 */
+	public function setPassword($password) {
+		$this->password = $password;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $status        	
+	 */
+	public function setStatus($status) {
+		$this->status = $status;
+		return $this;
+	}
 
     public function exchangeArray ($data)
     {
@@ -299,4 +352,5 @@ class User implements InputFilterAwareInterface
         
         return $this->inputFilter;
     }
+	
 }

@@ -44,6 +44,27 @@ return array(
 						        ),
 						    ),
 						),
+                		'register' => array(
+							'type'    => 'Zend\Mvc\Router\Http\Segment',
+						    'options' => array(
+						        'route'    => '/register/',
+						        'defaults' => array(
+					            	'controller' => 'Application\Controller\Index',
+					        		'action' => 'register'
+						        ),
+						    ),
+						),
+                		'activate_user' => array(
+							'type'    => 'Zend\Mvc\Router\Http\Segment',
+						    'options' => array(
+						        'route'    => '/register/activate[/:code]',
+						        'defaults' => array(
+					            	'controller' => 'Application\Controller\Index',
+					        		'action' => 'activate',
+						        	'code' => null
+						        ),
+						    ),
+						),
                         // The following is a route to simplify getting started
                         // creating
                         // new controllers and actions without needing to create
