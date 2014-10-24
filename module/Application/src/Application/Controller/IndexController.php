@@ -8,8 +8,6 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 namespace Application\Controller;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
 use Zend\Authentication\AuthenticationService;
 use Application\Model\Auth;
 use Application\Model\User;
@@ -18,10 +16,9 @@ use Zend\Http\Header\SetCookie;
 use Application\Model\Crypt;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\View\Model\JsonModel;
-use Application\Model\SimpleEmailService;
-use Application\Model\SimpleEmailServiceMessage;
+use Zend\Mvc\Controller\AbstractRestfulController;
 
-class IndexController extends AbstractActionController
+class IndexController extends AbstractRestfulController
 {
 
     protected $_userTable;
