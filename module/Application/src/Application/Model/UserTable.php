@@ -65,7 +65,8 @@ class UserTable extends AbstractTableGateway
         $row = $rowSet->current();
         
         if (! $row) {
-            throw new \Exception("Usuario não encontrado");
+            //throw new \Exception("Usuario não encontrado");
+            return false;
         }
         
         return $row;
@@ -80,8 +81,8 @@ class UserTable extends AbstractTableGateway
                 'email' => $user->getEmail(),
                 'first_name' => $user->getFirstName(),
                 'last_name' => $user->getLastName(),
-                'password' => $securePass
-        // 'status' => $user->getStatus()
+                'password' => $securePass,
+        		'status' => $user->getStatus()
                 );
         
         $idUser = (int) $user->getIdUser();

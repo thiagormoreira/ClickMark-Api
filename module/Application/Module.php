@@ -27,8 +27,8 @@ class Module
 {
 
     protected $blacklistController = array(
-            'Application\Controller\User',
-            'Application\Controller\Admin'
+            //'Application\Controller\User',
+            //'Application\Controller\Admin'
     );
 
     protected $whitelistAction = array(

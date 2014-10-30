@@ -8,17 +8,17 @@ use Zend\InputFilter\Factory as InputFactory;
 class User implements InputFilterAwareInterface
 {
 
-    private $iduser;
+    public $iduser;
 
-    private $email;
+    public $email;
 
-    private $first_name;
+    public $first_name;
 
-    private $last_name;
+    public $last_name;
 
-    private $password;
+    public $password;
 
-    private $status;
+    public $status;
 
     protected $inputFilter;
 

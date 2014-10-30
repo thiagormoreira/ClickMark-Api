@@ -17,6 +17,8 @@ use Application\Model\Crypt;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\Controller\AbstractRestfulController;
+use Application\Model\SimpleEmailService;
+use Application\Model\SimpleEmailServiceMessage;
 
 class IndexController extends AbstractRestfulController
 {
@@ -37,7 +39,7 @@ class IndexController extends AbstractRestfulController
 
     public function indexAction ()
     {
-        $url = $appArray = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
+        $url = $this->getServiceLocator()->get('Config')['app']['79216']['url'];
        	return $this->redirect()->toUrl($url);
     }
 
@@ -86,8 +88,7 @@ class IndexController extends AbstractRestfulController
     			//// SENHA INCORRETA ///////////
     			$response = array( 'success' => false, 'errorCode' => '1');
     		}
-    			 
-    		$crypt = new Crypt();
+    		
     		$output = $crypt->encryptArrayResponse($response);
     		
     		$result = new JsonModel(array(
@@ -159,7 +160,6 @@ EOD;
     		$this->_adapter = $sm->get('zend_db_adapter');
     		
     	
-    		$crypt = new Crypt();
     		$output = $crypt->encryptArrayResponse($response);
     	
     		$result = new JsonModel(array(

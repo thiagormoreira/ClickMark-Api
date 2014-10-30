@@ -65,6 +65,17 @@ return array(
 						        ),
 						    ),
 						),
+                		'forgot_password' => array(
+							'type'    => 'Zend\Mvc\Router\Http\Segment',
+						    'options' => array(
+						        'route'    => '/user/forgot-password/[:q]',
+						        'defaults' => array(
+					            	'controller' => 'Application\Controller\User',
+					        		'action' => 'forgotPassword',
+						        	'q' => null
+						        ),
+						    ),
+						),
                         // The following is a route to simplify getting started
                         // creating
                         // new controllers and actions without needing to create
@@ -120,7 +131,8 @@ return array(
         ),
         'controllers' => array(
                 'invokables' => array(
-                        'Application\Controller\Index' => 'Application\Controller\IndexController'
+                        'Application\Controller\Index' => 'Application\Controller\IndexController',
+                        'Application\Controller\User' => 'Application\Controller\UserController'
                 )
         ),
         'view_manager' => array(
